@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\UserRun;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,39 +13,28 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
+        'id',
         'name',
         'email',
+        'is_admin',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    protected $table = "users";
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    protected $appends = ['avatar'];
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    public function getAvatarAttribute()
+    public function UserRun()
     {
-        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email)));
+        return $this->hasMany(UserRun::class);
     }
 }

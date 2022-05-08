@@ -15,3 +15,5 @@ Route::put('users/edit', [AuthController::class, 'editUser'])->middleware('auth:
 Route::delete('users/delete/{id}', [AuthController::class, 'deleteUsers'])->middleware('auth:sanctum');
 Route::get('getAllRun', [UserRun::class, 'getAllRun'])->middleware('auth:sanctum');
 Route::delete('run/delete/{id}', [UserRun::class, 'destroy'])->middleware('auth:sanctum');
+
+Route::apiResource('/run', UserRun::class);

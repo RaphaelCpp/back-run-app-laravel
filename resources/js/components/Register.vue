@@ -1,5 +1,4 @@
 <template>
-    <!-- <router-link :to="'/dashboard'">Dashboard</router-link> -->
     <div class="container divParentForm">
         <form @submit.prevent="login">
             <div class="text-center py-5">

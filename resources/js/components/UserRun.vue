@@ -1,24 +1,3 @@
-<!-- <template>
-    <router-link :to="'/login'">Login</router-link>
-    <h1>Dashboard</h1>
-    <button @click="getInformations">Obtenir mes informations</button>
-</template>
-
-<script>
-import axiosClient from "../axios";
-export default {
-    name: "Dashboard",
-    methods: {
-        getInformations() {
-            axiosClient
-                .post("/profile")
-                .then((res) => console.log(res))
-                .catch((err) => console.log(err));
-        },
-    },
-};
-</script> -->
-
 <template>
     <div class="container-fluid p-0"><navBar /></div>
     <div class="container-fluid">
@@ -44,11 +23,6 @@ export default {
                     <td>{{ run.created_at.slice(0, 10) }}</td>
                     <td>{{ run.user_id }}</td>
                     <td>
-                        <a
-                            v-bind:data-id="run.id"
-                            class="edit btn btn-success btn-sm"
-                            >Edit</a
-                        >
                         <a
                             v-bind:data-id="run.id"
                             class="deleteRun btn btn-danger btn-sm"
@@ -153,7 +127,7 @@ export default {
         $("body").on("click", ".deleteRun", function () {
             //alert("lol");
             var run_id = $(this).data("id");
-            axiosClient.post("run/delete/" + run_id).then((res) => {
+            axiosClient.delete("run/delete/" + run_id).then((res) => {
                 $(this).closest("tr").remove();
             });
         });

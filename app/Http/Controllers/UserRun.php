@@ -22,18 +22,6 @@ class UserRun extends Controller
     public function getAllRun(Request $request)
     {
         return UserRunM::all();
-        // if ($request->ajax()) {
-        //     $data = UserRunM::latest()->get();
-        //     return Datatables::of($data)
-        //         ->addIndexColumn()
-        //         ->addColumn('action', function ($row) {
-        //             $actionBtn = '<a data-id="' . $row->id . '" href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a data-id="' . $row->id . '" href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-        //             return $actionBtn;
-        //         })
-        //         ->rawColumns(['action'])
-        //         ->make(true);
-        // }
-        // return view('run.run');
     }
 
     /**
@@ -68,13 +56,13 @@ class UserRun extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-        $userrun = UserRunM::findOrFail($id);
-        $userrun->update($request->all());
-        return response()->json($userrun, 200);
-    }
+    // public function update(Request $request, $id)
+    // {
+    //     //
+    //     $userrun = UserRunM::findOrFail($id);
+    //     $userrun->update($request->all());
+    //     return response()->json($userrun, 200);
+    // }
 
     /**
      * Remove the specified resource from storage.

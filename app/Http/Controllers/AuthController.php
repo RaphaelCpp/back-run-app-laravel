@@ -63,35 +63,14 @@ class AuthController extends Controller
     }
 
     //Pour le back 
-
-    public function index(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = User::latest()->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $actionBtn = '<a data-id="' . $row->id . '" href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a data-id="' . $row->id . '" href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-        return view('users.index');
-    }
-
     public function editUser(Request $request)
     {
-        $user = User::findOrFail($request->user_id);
-        $user->update(
-            ['name' => $request->name],
-            ["email" => $request->email]
-        );
-
+        $user = User::findOrFail($request->id);
+        $user->update($request->all());
         return response()->json(['success' => 'User saved successfully !']);
     }
 
-    public function getUsers($id)
+    public function getUser($id)
     {
         return User::findOrFail($id);
     }
@@ -106,35 +85,4 @@ class AuthController extends Controller
         User::findOrFail($id)->delete();
         return response(['message' => 'Deleted Successfully'], 200);
     }
-
-    // public function store(Request $request)
-    // {
-    //     User::updateOrCreate(
-    //         ['id' => $request->user_id],
-    //         ['name' => $request->name],
-    //         ['email' => $request->email],
-    //     );
-    //     return response()->json(['success' => "User saved successfully !"]);
-    // }
-
-    // public function register(Request $request)
-    // {
-    //     $fields = $request->validate([
-    //         'name' => 'required|string',
-    //         'email' => 'required|string|unique:users,email',
-    //         'password' => 'required|string|confirmed',
-    //     ]);
-
-    //     $user = User::create([
-    //         'name' => $fields['name'],
-    //         'email' => $fields['email'],
-    //         'password' => bcrypt($fields['password'])
-    //     ]);
-
-    //     $response = [
-    //         'user' => $user,
-    //     ];
-
-    //     return response($response, 201);
-    // }
 }

@@ -1,24 +1,3 @@
-<!-- <template>
-    <router-link :to="'/login'">Login</router-link>
-    <h1>Dashboard</h1>
-    <button @click="getInformations">Obtenir mes informations</button>
-</template>
-
-<script>
-import axiosClient from "../axios";
-export default {
-    name: "Dashboard",
-    methods: {
-        getInformations() {
-            axiosClient
-                .post("/profile")
-                .then((res) => console.log(res))
-                .catch((err) => console.log(err));
-        },
-    },
-};
-</script> -->
-
 <template>
     <div class="container-fluid p-0"><navBar /></div>
     <div class="container-fluid">
@@ -42,7 +21,9 @@ export default {
                     <td>
                         <a
                             v-bind:data-id="user.id"
-                            class="edit btn btn-success btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            class="editUser btn btn-success btn-sm"
                             >Edit</a
                         >
                         <a
@@ -68,28 +49,91 @@ export default {
             <div class="modal-content">
                 <form id="userForm">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modelHeading">
-                            Modal title
-                        </h5>
+                        <h5 class="modal-title" id="modelHeading">Edit User</h5>
                         <button
                             type="button"
                             class="close"
-                            data-dismiss="modal"
+                            data-bs-dismiss="modal"
                             aria-label="Close"
                         >
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="name" name="name" />
-                        <input type="text" id="email" name="email" />
-                        <input type="text" id="admin" name="is_admin" />
+                        <input type="hidden" id="id" name="id" />
+
+                        <div class="form-group row">
+                            <label for="name" class="col-sm-2 col-form-label"
+                                >Name</label
+                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    value="Marc"
+                                    name="name"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group row my-3">
+                            <label for="email" class="col-sm-2 col-form-label"
+                                >Email</label
+                            >
+                            <div class="col-sm-10">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                    value="email@example.com"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label
+                                class="col-sm-2 col-form-label"
+                                for="top_duplex_printing"
+                                >Admin</label
+                            >
+
+                            <div class="col-sm-10 mt-2">
+                                <div class="form-check form-check-inline">
+                                    <input
+                                        type="radio"
+                                        id="admin_1"
+                                        name="is_admin"
+                                        class="form-check-input"
+                                        value="1"
+                                    />
+                                    <label
+                                        class="form-check-label"
+                                        for="admin_1"
+                                        >oui</label
+                                    >
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input
+                                        type="radio"
+                                        id="admin_0"
+                                        name="is_admin"
+                                        class="form-check-input"
+                                        value="0"
+                                    />
+                                    <label
+                                        class="form-check-label"
+                                        for="admin_0"
+                                        >non</label
+                                    >
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button
                             type="button"
                             class="btn btn-secondary"
-                            data-dismiss="modal"
+                            data-bs-dismiss="modal"
                         >
                             Close
                         </button>
@@ -97,6 +141,7 @@ export default {
                             type="button"
                             class="btn btn-primary"
                             id="saveBtn"
+                            data-bs-dismiss="modal"
                         >
                             Save changes
                         </button>
@@ -134,21 +179,33 @@ export default {
             });
         });
 
-        $("body").on("click", ".edit", function () {
+        $("body").on("click", ".editUser", function () {
             var user_id = $(this).data("id");
             console.log(user_id);
-            //$.get("{{ url('users')}}" + "/" + user_id, function (data) {
-            //     $("#modelHeading").html("Edit User");
-            //     $("#saveBtn").val("edit-user");
-            //     $("#user_id").val(data.id);
-            //     $("#name").val(data.name);
-            //     $("#email").val(data.email);
-            // });
+            axiosClient.get("users/" + user_id).then((res) => {
+                $("#id").val(user_id);
+                $("#name").val(res.data.name);
+                $("#email").val(res.data.email);
+                if (res.data.is_admin === 1) {
+                    $("#admin_1").prop("checked", true);
+                } else {
+                    $("#admin_0").prop("checked", true);
+                }
+            });
+        });
+
+        $("#saveBtn").on("click", function (e) {
+            e.preventDefault();
+            axiosClient
+                .put("users/edit", $("#userForm").serialize())
+                .then((res) => {
+                    window.location.reload();
+                });
         });
 
         $("body").on("click", ".delete", function () {
             var user_id = $(this).data("id");
-            axiosClient.post("users/delete/" + user_id).then((res) => {
+            axiosClient.delete("users/delete/" + user_id).then((res) => {
                 $(this).closest("tr").remove();
             });
         });

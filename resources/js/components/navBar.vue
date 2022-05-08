@@ -18,14 +18,6 @@ export default {
             localStorage.removeItem("auth_token");
         },
     },
-    // setup() {
-    //     onMounted(() => {
-    //         axiosClient.post("/profile").then((result) => {
-    //             console.log(result.data);
-    //             this.users = result.data;
-    //         });
-    //     });
-    // },
     created() {
         this.loadData();
     },

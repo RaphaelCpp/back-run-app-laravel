@@ -8,16 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-Route::middleware(['cors'])->group(function () {
 
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
 
-    Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::post('profile', [AuthController::class, 'profile']);
-        Route::post('logout', [AuthController::class, 'logout']);
-    });
-});
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('profile', [AuthController::class, 'profile'])->middleware('auth:sanctum');
+Route::post('logout', [AuthController::class, 'logout']);
+Route::get('getAllUser', [AuthController::class, 'getallUser'])->middleware('auth:sanctum');
+Route::post('users/delete/{id}', [AuthController::class, 'deleteUsers'])->middleware('auth:sanctum');
+Route::get('getAllRun', [UserRun::class, 'getAllRun'])->middleware('auth:sanctum');
+Route::post('run/delete/{id}', [UserRun::class, 'destroy'])->middleware('auth:sanctum');
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });

@@ -96,6 +96,11 @@ class AuthController extends Controller
         return User::findOrFail($id);
     }
 
+    public function getallUser()
+    {
+        return User::all();
+    }
+
     public function deleteUsers($id)
     {
         User::findOrFail($id)->delete();

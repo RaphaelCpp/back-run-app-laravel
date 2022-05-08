@@ -8,13 +8,21 @@
             <div class="row">
                 <div class="col-12">
                     <input
+                        type="name"
+                        class="mx-auto form-control inputForm"
+                        placeholder="marc"
+                        v-model="name"
+                    />
+                </div>
+                <div class="col-12 my-3">
+                    <input
                         type="email"
                         class="mx-auto form-control inputForm"
                         placeholder="name@example.com"
                         v-model="email"
                     />
                 </div>
-                <div class="col-12 my-3">
+                <div class="col-12">
                     <input
                         type="password"
                         class="mx-auto form-control inputForm"
@@ -24,18 +32,30 @@
                         v-model="password"
                     />
                 </div>
+                <div class="col-12 my-3">
+                    <input
+                        type="password"
+                        class="mx-auto form-control inputForm"
+                        id="floatingPassword2"
+                        placeholder="Password confirmation"
+                        required
+                        v-model="password_confirmation"
+                    />
+                </div>
             </div>
             <div>
-                <p class="text-danger text-center">{{ message }}</p>
+                <p class="text-success text-center">{{ messageOk }}</p>
+                <p class="text-danger text-center">{{ messageBad }}</p>
             </div>
             <div class="text-center my-3">
-                <button type="submit" class="btn btn-primary">Connexion</button>
+                <button type="submit" class="btn btn-primary">
+                    Inscription
+                </button>
             </div>
-
             <div class="mt-2 text-center mb-5">
                 <p>
-                    vous n'avez pas de compte ? veuillez cliquer
-                    <router-link :to="'/register'">ici</router-link>
+                    vous avez déjà un compte ? veuillez cliquer
+                    <router-link :to="'/'">ici</router-link>
                 </p>
             </div>
         </form>
@@ -60,40 +80,41 @@
 </style>
 
 <script>
-import store from "../store";
 import axios from "axios";
+import router from "../router";
 
 export default {
     data() {
         return {
+            name: "",
             email: "",
             password: "",
-            message: "",
+            password_confirmation: "",
+            messageOk: "",
+            messageBad: "",
         };
     },
     methods: {
         login() {
             const res = axios
-                .post("http://127.0.0.1:8000/api/login", {
+                .post("http://127.0.0.1:8000/api/register", {
+                    name: this.name,
                     email: this.email,
                     password: this.password,
+                    password_confirmation: this.password_confirmation,
                 })
                 .then((result) => {
-                    if (result.data.user_admin === 1) {
-                        this.message = "";
-                        localStorage.setItem(
-                            "auth_token",
-                            result.data.access_token
-                        );
-                        store.state.user.token = result.data.access_token;
-                        this.$router.push("/dashboard");
-                    } else {
-                        this.message =
-                            "Vous devez être admin pour vous connecter !";
+                    if (result.status === 200) {
+                        this.messageOk = result.data?.message;
+                        this.messageBad = "";
+                        setTimeout(function () {
+                            router.push({ path: "/" });
+                        }, 1000);
                     }
                 })
                 .catch((error) => {
-                    this.message = "informations incorrectes !";
+                    this.messageOk = "";
+                    this.messageBad = "Erreur lors de la création du compte";
                     console.error(error);
                 });
         },

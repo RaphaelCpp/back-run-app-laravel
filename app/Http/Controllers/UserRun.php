@@ -19,20 +19,21 @@ class UserRun extends Controller
         return response()->json($runList, 200);
     }
 
-    public function getRun(Request $request)
+    public function getAllRun(Request $request)
     {
-        if ($request->ajax()) {
-            $data = UserRunM::latest()->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $actionBtn = '<a data-id="' . $row->id . '" href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a data-id="' . $row->id . '" href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-        return view('run.run');
+        return UserRunM::all();
+        // if ($request->ajax()) {
+        //     $data = UserRunM::latest()->get();
+        //     return Datatables::of($data)
+        //         ->addIndexColumn()
+        //         ->addColumn('action', function ($row) {
+        //             $actionBtn = '<a data-id="' . $row->id . '" href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a data-id="' . $row->id . '" href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+        //             return $actionBtn;
+        //         })
+        //         ->rawColumns(['action'])
+        //         ->make(true);
+        // }
+        // return view('run.run');
     }
 
     /**

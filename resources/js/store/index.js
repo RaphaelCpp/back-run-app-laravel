@@ -4,7 +4,7 @@ const store = createStore({
     state: {
         user: {
             data: {},
-            token: null,
+            token: localStorage.getItem("auth_token"),
         },
     },
 });

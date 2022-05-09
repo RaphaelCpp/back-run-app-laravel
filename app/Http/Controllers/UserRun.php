@@ -46,9 +46,8 @@ class UserRun extends Controller
     public function show($id)
     {
         //
-        $runList = UserRunM::paginate(8);
-        $runList = UserRunM::where('user_id', $id);
-        return response()->json($runList->get());
+        $runList = UserRunM::where('user_id', $id)->paginate(6);
+        return response()->json($runList, 200);
     }
 
     /**
